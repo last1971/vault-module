@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import {Inject, Injectable} from '@nestjs/common';
 import Vault from 'hashi-vault-js';
 import { Cron } from '@nestjs/schedule';
 import { VaultCredentials } from './vault.credentials';
-import { VaultInitOptions } from './vault.init.options';
+import {VAULT_INIT_OPTIONS, VaultInitOptions} from './vault.init.options';
 
 @Injectable()
 export class VaultService {
     private vault: Vault;
     private credentials: VaultCredentials;
     private data: any = {};
-    constructor(initOptions: VaultInitOptions) {
+    constructor(@Inject(VAULT_INIT_OPTIONS) private initOptions: VaultInitOptions) {
         this.credentials = initOptions.credentials;
         this.vault = new Vault(initOptions.config);
     }
