@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import Vault from 'hashi-vault-js';
 import { Cron } from '@nestjs/schedule';
-import {VaultCredentials} from "./vault.credentials";
-import {VaultInitOptions} from "./vault.init.options";
+import { VaultCredentials } from './vault.credentials';
+import { VaultInitOptions } from './vault.init.options';
 
 @Injectable()
 export class VaultService {

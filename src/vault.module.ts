@@ -1,7 +1,8 @@
-import {DynamicModule, Module} from "@nestjs/common";
-import {VaultInitOptions} from "./vault.init.options";
-import {VaultService} from "./vault.service";
+import { DynamicModule, Global, Module } from '@nestjs/common';
+import { VaultInitOptions } from './vault.init.options';
+import { VaultService } from './vault.service';
 
+@Global()
 @Module({})
 export class VaultModule {
     static forRoot(options: VaultInitOptions): DynamicModule {
@@ -15,6 +16,6 @@ export class VaultModule {
             providers: providers,
             exports: providers,
             module: VaultModule,
-        }
+        };
     }
 }
