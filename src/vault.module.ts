@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { VaultService } from './vault.service';
-import { ConfigurableVaultModule } from "./vault.module.definition";
+import { ConfigurableVaultModule } from './vault.module.definition';
 
 @Global()
 @Module({

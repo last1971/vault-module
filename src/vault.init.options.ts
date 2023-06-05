@@ -6,4 +6,4 @@ export interface VaultInitOptions {
     config: VaultConfig;
 }
 
-export const VAULT_INIT_OPTIONS = 'VAULT_INIT_OPTIONS'
+export const VAULT_INIT_OPTIONS = 'VAULT_INIT_OPTIONS';
