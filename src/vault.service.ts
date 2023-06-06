@@ -36,6 +36,9 @@ export class VaultService {
         }
         return this.data[path];
     }
+    clearCache(): void {
+        this.data = {};
+    }
     @Cron('0 0 * * * *')
     private async renewToken(): Promise<void> {
         if (!this.credentials.token) {

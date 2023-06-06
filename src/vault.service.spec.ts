@@ -48,9 +48,20 @@ describe('Vault Service', () => {
     });
 
     it('test get', async () => {
+        await service.get('test');
         const res = await service.get('test');
+        expect(loginWithUserpass.mock.calls).toHaveLength(1);
+        expect(readKVSecret.mock.calls).toHaveLength(1);
         expect(loginWithUserpass.mock.calls[0]).toEqual(['user', 'pass', 'auth/userpass']);
         expect(readKVSecret.mock.calls[0]).toEqual(['test_token', 'test']);
         expect(res).toEqual({ test: 'test' });
+    });
+
+    it('clear cache', async () => {
+        await service.get('test');
+        service.clearCache();
+        await service.get('test');
+        expect(loginWithUserpass.mock.calls).toHaveLength(1);
+        expect(readKVSecret.mock.calls).toHaveLength(2);
     });
 });
