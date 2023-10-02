@@ -1,8 +1,8 @@
 import { VaultService } from './vault.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { VaultConfig } from 'hashi-vault-js';
 import { VaultInitOptions } from './vault.init.options';
 import Vault from 'hashi-vault-js';
+import { VaultConfig } from './vault.config';
 
 const loginWithUserpass = jest.spyOn(Vault.prototype, 'loginWithUserpass').mockImplementation(async () => ({
     client_token: 'test_token',
@@ -28,8 +28,9 @@ const readKVSecret = jest.spyOn(Vault.prototype, 'readKVSecret').mockImplementat
 describe('Vault Service', () => {
     let service: VaultService;
     const config: VaultConfig = {
+        baseUrl: '', https: false, proxy: false,
         rootPath: 'test',
-        timeout: 0,
+        timeout: 0
     };
     const init: VaultInitOptions = {
         config,
