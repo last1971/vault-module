@@ -28,9 +28,11 @@ const readKVSecret = jest.spyOn(Vault.prototype, 'readKVSecret').mockImplementat
 describe('Vault Service', () => {
     let service: VaultService;
     const config: VaultConfig = {
-        baseUrl: '', https: false, proxy: false,
+        baseUrl: '',
+        https: false,
+        proxy: false,
         rootPath: 'test',
-        timeout: 0
+        timeout: 0,
     };
     const init: VaultInitOptions = {
         config,
