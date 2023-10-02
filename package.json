@@ -1,6 +1,6 @@
 {
   "name": "vault-module",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Nestjs Vault Module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
