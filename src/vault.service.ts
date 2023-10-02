@@ -15,11 +15,23 @@ export class VaultService {
         this.vault = new Vault(initOptions.config);
     }
     private async login() {
-        const response = await this.vault.loginWithUserpass(
-            this.credentials.user,
-            this.credentials.password,
-            'auth/userpass',
-        );
+        let isAxiosError = true;
+        let response: any;
+        while (isAxiosError) {
+            try {
+                response = await this.vault.loginWithUserpass(
+                    this.credentials.user,
+                    this.credentials.password,
+                    'auth/userpass',
+                );
+                isAxiosError = false;
+            } catch (e) {
+                if (e.name !== 'AxiosError') {
+                    throw e;
+                }
+            }
+        }
+
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.credentials.token = response.client_token;
