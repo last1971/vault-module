@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import Vault from 'hashi-vault-js';
 import { Cron } from '@nestjs/schedule';
 import { VaultCredentials } from './vault.credentials';
@@ -6,13 +6,16 @@ import { VaultInitOptions } from './vault.init.options';
 import { VAULT_INIT_OPTIONS } from './vault.module.definition';
 
 @Injectable()
-export class VaultService {
+export class VaultService implements OnModuleInit {
     private vault: Vault;
     private credentials: VaultCredentials;
     private data: any = {};
     constructor(@Inject(VAULT_INIT_OPTIONS) private initOptions: VaultInitOptions) {
         this.credentials = initOptions.credentials;
         this.vault = new Vault(initOptions.config);
+    }
+    async onModuleInit(): Promise<any> {
+        await this.login();
     }
     private async login() {
         let isAxiosError = true;
