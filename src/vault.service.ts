@@ -15,17 +15,17 @@ export class VaultService implements OnModuleInit {
         this.vault = new Vault(initOptions.config);
     }
     async onModuleInit(): Promise<any> {
-        await Promise.race([
-            this.login(),
-            new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('VaultService не загрузился за 1 минуту')), 60000)
-            ),
-        ]);
+        await this.login();
     }
     private async login() {
         let isAxiosError = true;
         let response: any;
+        const start = Date.now();
+        const timeout = 60000; // 1 минута
         while (isAxiosError) {
+            if (Date.now() - start > timeout) {
+                throw new Error('VaultService не загрузился за 1 минуту');
+            }
             try {
                 response = await this.vault.loginWithUserpass(
                     this.credentials.user,
