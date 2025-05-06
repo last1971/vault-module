@@ -15,7 +15,12 @@ export class VaultService implements OnModuleInit {
         this.vault = new Vault(initOptions.config);
     }
     async onModuleInit(): Promise<any> {
-        await this.login();
+        await Promise.race([
+            this.login(),
+            new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('VaultService не загрузился за 1 минуту')), 60000)
+            ),
+        ]);
     }
     private async login() {
         let isAxiosError = true;
