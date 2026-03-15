@@ -60,9 +60,7 @@ export class VaultService implements OnModuleInit {
     }
     async get(path: string): Promise<Record<string, unknown>> {
         if (!this.data[path]) {
-            const response = await this.withAuth(() =>
-                this.vault.readKVSecret(this.credentials.token, path),
-            );
+            const response = await this.withAuth(() => this.vault.readKVSecret(this.credentials.token, path));
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             this.data[path] = response.data;
