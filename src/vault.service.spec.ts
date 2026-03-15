@@ -44,6 +44,7 @@ describe('Vault Service', () => {
         }).compile();
 
         service = module.get<VaultService>(VaultService);
+        await service.onModuleInit();
 
         loginWithUserpass.mockClear();
         readKVSecret.mockClear();
@@ -56,9 +57,8 @@ describe('Vault Service', () => {
     it('test get', async () => {
         await service.get('test');
         const res = await service.get('test');
-        expect(loginWithUserpass.mock.calls).toHaveLength(1);
+        expect(loginWithUserpass.mock.calls).toHaveLength(0);
         expect(readKVSecret.mock.calls).toHaveLength(1);
-        expect(loginWithUserpass.mock.calls[0]).toEqual(['user', 'pass', 'auth/userpass']);
         expect(readKVSecret.mock.calls[0]).toEqual(['test_token', 'test']);
         expect(res).toEqual({ test: 'test' });
     });
@@ -69,5 +69,26 @@ describe('Vault Service', () => {
         await service.get('test');
         // expect(loginWithUserpass.mock.calls).toHaveLength(1);
         expect(readKVSecret.mock.calls).toHaveLength(2);
+    });
+
+    it('re-login on 403', async () => {
+        readKVSecret.mockRejectedValueOnce({ response: { status: 403 } });
+        const res = await service.get('test');
+        expect(loginWithUserpass.mock.calls).toHaveLength(1);
+        expect(readKVSecret.mock.calls).toHaveLength(2);
+        expect(res).toEqual({ test: 'test' });
+    });
+
+    it('re-login on 401', async () => {
+        readKVSecret.mockRejectedValueOnce({ response: { status: 401 } });
+        const res = await service.get('test');
+        expect(loginWithUserpass.mock.calls).toHaveLength(1);
+        expect(readKVSecret.mock.calls).toHaveLength(2);
+        expect(res).toEqual({ test: 'test' });
+    });
+
+    it('throw on other errors', async () => {
+        readKVSecret.mockRejectedValueOnce({ response: { status: 500 } });
+        await expect(service.get('test')).rejects.toEqual({ response: { status: 500 } });
     });
 });

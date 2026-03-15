@@ -44,12 +44,25 @@ export class VaultService implements OnModuleInit {
         // @ts-ignore
         this.credentials.token = response.client_token;
     }
-    async get(path: string): Promise<Record<string, unknown>> {
+    private async withAuth<T>(fn: () => PromiseLike<T>): Promise<T> {
         if (!this.credentials.token) {
             await this.login();
         }
+        try {
+            return await fn();
+        } catch (e) {
+            if (e?.response?.status === 401 || e?.response?.status === 403) {
+                await this.login();
+                return await fn();
+            }
+            throw e;
+        }
+    }
+    async get(path: string): Promise<Record<string, unknown>> {
         if (!this.data[path]) {
-            const response = await this.vault.readKVSecret(this.credentials.token, path);
+            const response = await this.withAuth(() =>
+                this.vault.readKVSecret(this.credentials.token, path),
+            );
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             this.data[path] = response.data;
